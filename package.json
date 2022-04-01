@@ -1,0 +1,36 @@
+{
+  "name": "clear-wire",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with Fastify-CLI.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tap \"test/**/*.test.js\"",
+    "start": "node app.js",
+    "dev": "fastify start -w -l info -P app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^4.0.0-alpha.0",
+    "ethers": "^5.6.1",
+    "fastify": "^3.0.0",
+    "fastify-autoload": "^3.10.0",
+    "fastify-cli": "^2.15.0",
+    "fastify-env": "^2.1.1",
+    "fastify-plugin": "^3.0.0",
+    "fastify-sensible": "^3.1.2",
+    "fluent-json-schema": "^3.1.0",
+    "hardhat": "^2.9.1",
+    "pino-pretty": "^7.5.4"
+  },
+  "devDependencies": {
+    "tap": "^15.1.6"
+  }
+}
