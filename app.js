@@ -27,6 +27,12 @@ fastify.register(AutoLoad, {
   dir: path.join(__dirname, "routes"),
 });
 
+fastify.register(require("point-of-view"), {
+  engine: {
+    ejs: require("ejs"),
+  },
+});
+
 fastify.listen(3000, function (err, address) {
   if (err) {
     fastify.log.error(err);

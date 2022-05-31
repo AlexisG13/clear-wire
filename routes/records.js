@@ -15,6 +15,7 @@ module.exports = async function (fastify, opts) {
       contract.abi,
       signer
     );
+    
     const timestamp = Math.floor(Date.now()/1000);
     const transaction = await lighting.addRecord(companyId, timestamp, { consumed, produced, date: timestamp });
     const record = await lighting.electricalRecords(companyId, timestamp);
@@ -36,9 +37,11 @@ module.exports = async function (fastify, opts) {
       contract.abi,
       signer
     );
-    const records = await lighting.getLast10Records(2);
+    const records = await lighting.getLast10Records(1);
     const parsedRecords = records.map(record => parseRecord(record));
-    return { parsedRecords };
+    console.log(parsedRecords)
+    return res.view("/views/index.ejs", { parsedRecords: parsedRecords });
+   //return {parsedRecords}
   })
 
 
