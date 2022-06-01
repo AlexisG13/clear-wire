@@ -1,6 +1,5 @@
-const fastify = require("fastify")();
-const fastifyEnv = require("fastify-env");
-const fp = require("fastify-plugin");
+import fastifyEnv from "fastify-env";
+import fp from "fastify-plugin";
 
 const schema = {
   type: "object",
@@ -22,9 +21,9 @@ const options = {
   dotenv: true,
 };
 
-module.exports = fp((fastify, opts, done) => {
+export default fp(async (fastify, opts) => {
+  console.log('loading env');
   fastify.register(fastifyEnv, options).ready((err) => {
-    if (err) console(err);
+    if (err) console.log(err);
   });
-  done();
 });

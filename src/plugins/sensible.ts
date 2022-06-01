@@ -1,6 +1,6 @@
 'use strict'
 
-const fp = require('fastify-plugin')
+import fp from 'fastify-plugin'
 
 /**
  * This plugins adds some utilities to handle http errors
