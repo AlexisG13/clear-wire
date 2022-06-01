@@ -10,7 +10,8 @@
     "test": "tap \"test/**/*.test.js\"",
     "start": "node build/app.js",
     "build": "tsc -w",
-    "dev": "tsc-watch --onSuccess \"node build/app.js\""
+    "dev": "tsc-watch --onSuccess \"node build/app.js\"",
+    "prisma:migrate:run": "npx prisma migrate deploy --preview-feature && prisma generate"
   },
   "keywords": [],
   "author": "",
