@@ -56,3 +56,14 @@ profile-*
 profile*
 *clinic*
 *flamegraph*
+.env
+package-lock.json
+artifacts
+cache
+.env
+package-lock.json
+cache/solidity-files-cache.json
+artifacts/contracts/lighting.sol/Lighting.json
+artifacts/contracts/lighting.sol/Lighting.dbg.json
+package-lock.json
+.env
