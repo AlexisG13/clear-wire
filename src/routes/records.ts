@@ -1,25 +1,35 @@
 import contract from '../contracts/Lighting.json';
 import { ethers } from 'ethers';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Registro } from '@prisma/client';
 
 export default async function (fastify, opts) {
-  const { ethersProvider, prisma } = <
-    { ethersProvider: ethers.providers.JsonRpcProvider; prisma: PrismaClient }
+  const { ethersProvider, prisma, config } = <
+    { ethersProvider: ethers.providers.JsonRpcProvider; prisma: PrismaClient; config: any }
   >fastify;
 
   fastify.post('/records/:companyId', async (req, res) => {
     const { consumed, produced } = req.body;
     const { companyId } = req.params;
-    const signer = ethersProvider.getSigner();
+    const signer = config.LOCAL ? 
+      ethersProvider.getSigner()
+    : new ethers.Wallet('4aa27bb6b80767abff98a77125142334099959f893af2f94f7ce2e00473fa2e1', ethersProvider);
     const lighting = new ethers.Contract(
-      '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+      config.CONTRACT_ADDRESS,
       contract.abi,
       signer
     );
-    await prisma.registro.create({
+    const timestamp = Math.floor(Date.now() / 1000);
+    const tx = await lighting.addRecord(companyId, timestamp, {
+      consumed,
+      produced,
+      date: timestamp,
+    });
+
+    const record = await prisma.registro.create({
       data: {
         consumido: consumed,
         producido: produced,
+        transactionHash: tx.hash,
         entidad: {
           connectOrCreate: {
             where: { id: Number(companyId) },
@@ -28,28 +38,50 @@ export default async function (fastify, opts) {
         },
       },
     });
-
-    const timestamp = Math.floor(Date.now() / 1000);
-    await lighting.addRecord(companyId, timestamp, {
-      consumed,
-      produced,
-      date: timestamp,
-    });
-    const record = await lighting.electricalRecords(companyId, timestamp);
     return parseRecord(record);
   });
 
   fastify.get('/records/:companyId/top', async (req, res) => {
     const { companyId } = req.params;
-    const signer = await ethersProvider.getSigner();
-    const lighting = new ethers.Contract(
-      '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-      contract.abi,
-      signer
-    );
-    const records = await lighting.getLast10Records(Number(companyId));
-    const parsedRecords = records.map((record) => parseRecord(record));
-    return res.view('src/views/index.ejs', { parsedRecords: parsedRecords });
+  //   const address = config.CONTRACT_ADDRESS;
+  //   const signer = config.LOCAL ? 
+  //   ethersProvider.getSigner()
+  // : new ethers.Wallet('4aa27bb6b80767abff98a77125142334099959f893af2f94f7ce2e00473fa2e1', ethersProvider);
+  //   const lighting = new ethers.Contract(
+  //     address,
+  //     contract.abi,
+  //     signer
+  //   );
+  //   const records = await lighting.getEntityLast10Records(Number(companyId));
+  //   const parsedRecords = records.map((record) => parseRecord(record));
+  //   const latestBlock = await ethersProvider.getBlock("latest")
+  //   console.log(latestBlock);
+    const latestRecords = await prisma.registro.findMany({
+      where: {
+        entidadId: Number(companyId)
+      },
+      orderBy: {
+        createdAt: 'desc' 
+      },
+      take: 10,
+      include: {
+        entidad: true
+      }
+    });
+    return res.view('src/views/index.ejs', { parsedRecords: latestRecords.map(record => parseRecord(record)) });
+  });
+
+  fastify.get('/records', async (req, res) => {
+    const latestRecords = await prisma.registro.findMany({
+      orderBy: {
+        createdAt: 'desc' 
+      },
+      take: 10,
+      include: {
+        entidad: true,
+      }
+    });
+    return res.view('src/views/index.ejs', { parsedRecords: latestRecords.map(record => parseRecord(record)) });
   });
 
   fastify.get('/entities', async(req, res) => {
@@ -57,10 +89,10 @@ export default async function (fastify, opts) {
   })
 }
 
-function parseRecord(record) {
+function parseRecord(record: Registro) {
+  console.log('estoy parseandooo')
   return {
-    produced: record.produced.toNumber(),
-    consumed: record.consumed.toNumber(),
-    date: new Date(record.date.toNumber() * 1000),
+    ...record,
+    createdAt: record.createdAt.toLocaleString('en-GB', { hour12: true })
   };
 }

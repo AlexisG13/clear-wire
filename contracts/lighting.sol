@@ -12,7 +12,9 @@ contract Lighting {
 
     mapping(uint256 => mapping(uint256 => ElectricityRecord))
         public electricalRecords;
-    mapping(uint256 => ElectricityRecord[]) public last10Records;
+    mapping(uint256 => ElectricityRecord[]) public last10EntityRecords;
+    //mapping(uint256 => ElectricityRecord[]) public last10Records;
+    ElectricityRecord[] public last10Records;
 
     function getProducedRecord(uint256 producerId, uint256 dateInEpoch)
         external
@@ -38,8 +40,16 @@ contract Lighting {
         return electricalRecords[producerId][dateInEpoch];
     }
 
-    function getLast10Records(uint256 producerId) external view returns (ElectricityRecord[] memory){
-      return last10Records[producerId];
+    function getlast10Records() public view returns (ElectricityRecord[] memory) {
+        return last10Records;
+    }
+
+    function getEntityLast10Records(uint256 producerId)
+        external
+        view
+        returns (ElectricityRecord[] memory)
+    {
+        return last10EntityRecords[producerId];
     }
 
     function addRecord(
@@ -47,10 +57,10 @@ contract Lighting {
         uint256 epochDate,
         ElectricityRecord calldata record
     ) external {
-        if (last10Records[producerId].length == 10) {
-            last10Records[producerId].pop();
+        if (last10EntityRecords[producerId].length == 10) {
+            last10EntityRecords[producerId].pop();
         }
         electricalRecords[producerId][epochDate] = record;
-        last10Records[producerId].push(record);
+        last10EntityRecords[producerId].push(record);
     }
 }

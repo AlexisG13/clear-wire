@@ -20,10 +20,11 @@ model Entidad {
 }
 
 model Registro {
-  id        Int      @id @default(autoincrement())
-  producido Float
-  consumido Float
-  createdAt DateTime @default(now()) @map("created_at")
-  entidad   Entidad  @relation(fields: [entidadId], references: [id])
-  entidadId Int
+  id              Int      @id @default(autoincrement())
+  producido       Float
+  consumido       Float
+  transactionHash String
+  createdAt       DateTime @default(now()) @map("created_at")
+  entidad         Entidad  @relation(fields: [entidadId], references: [id])
+  entidadId       Int
 }

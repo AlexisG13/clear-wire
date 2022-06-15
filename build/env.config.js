@@ -7,7 +7,7 @@ const fastify_env_1 = __importDefault(require("fastify-env"));
 const fastify_plugin_1 = __importDefault(require("fastify-plugin"));
 const schema = {
     type: "object",
-    required: ["PORT", "ETHEREUM_NETWORK_URL"],
+    required: ["PORT", "ETHEREUM_NETWORK_URL", "CONTRACT_ADDRESS", "LOCAL"],
     properties: {
         PORT: {
             type: "string",
@@ -16,6 +16,12 @@ const schema = {
         ETHEREUM_NETWORK_URL: {
             type: "string",
         },
+        CONTRACT_ADDRESS: {
+            type: "string",
+        },
+        LOCAL: {
+            type: "boolean",
+        }
     },
 };
 const options = {
