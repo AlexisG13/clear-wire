@@ -74,7 +74,7 @@ async function default_1(fastify, opts) {
                 entidad: true,
             }
         });
-        return res.view('src/views/index.ejs', { parsedRecords: latestRecords.map(record => parseRecord(record)) });
+        return res.view('src/views/generalTransaction.ejs', { parsedRecords: latestRecords.map(record => parseRecord(record)) });
     });
     fastify.get('/entities', async (req, res) => {
         const entities = await prisma.entidad.findMany();

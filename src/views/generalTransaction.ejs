@@ -16,17 +16,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link active" href="http://127.0.0.1:3000/records">Home</a>
+          
         </div>
       </div>
     </nav>
     <div style="background-color:rgb(33, 50, 91);width: 100%; height: 200px; position: absolute;"></div>
     <div class="container" style="background-color:white; position: relative; margin-top: 5%; padding-bottom: 5%;">
       
-      <h2>Registros presentes en la Blockchain de la entidad: ENTIDAD.NOMBRE </h2>
+      <h2>Registros presentes en la Blockchain</h2>
       <table class="table table-hover">
         <tr>
-
+          <th>Entidad</td>
           <th>Produced</td>
           <th>Consumed</td>
           <th>Date</td>
@@ -35,6 +35,7 @@
         
           <% parsedRecords.forEach(function(obj) { %>
             <tr>
+              <td><a href="http://127.0.0.1:3000/records/<%= obj.entidad.id %>/top"><%= obj.entidad.nombre %></a></td>
               <td><%= obj.producido %></td>
               <td><%= obj.consumido %></td>
               <td><%= obj.createdAt %></td>
