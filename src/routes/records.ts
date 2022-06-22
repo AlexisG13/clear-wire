@@ -97,7 +97,7 @@ export default async function (fastify, opts) {
         entidad: true,
       }
     });
-    return res.view('src/views/index.ejs', { parsedRecords: latestRecords.map(record => parseRecord(record)) });
+    return res.view('src/views/generalTransaction.ejs', { parsedRecords: latestRecords.map(record => parseRecord(record)) });
   });
 
   fastify.get('/entities', async(req, res) => {
