@@ -77,7 +77,12 @@ async function default_1(fastify, opts) {
                 }
             }
         });
-        return res.view('src/views/entity_records.ejs', { entidad });
+        const totalRecords = await prisma.registro.count({
+            where: {
+                entidadId: Number(companyId)
+            }
+        });
+        return res.view('src/views/entity_records.ejs', { entidad, totalRecords });
     });
     fastify.get('/records', async (req, res) => {
         const latestRecords = await prisma.registro.findMany({

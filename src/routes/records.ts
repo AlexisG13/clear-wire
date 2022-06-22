@@ -1,6 +1,7 @@
 import contract from '../contracts/Lighting.json';
 import { ethers } from 'ethers';
 import { PrismaClient, Registro } from '@prisma/client';
+import { count } from 'console';
 
 export default async function (fastify, opts) {
   const { ethersProvider, prisma, config } = <
@@ -84,7 +85,13 @@ export default async function (fastify, opts) {
         }
       }
     })
-    return res.view('src/views/entity_records.ejs', { entidad });
+    const totalRecords = await prisma.registro.count({
+      where: {
+        entidadId: Number(companyId)
+      }
+    })
+    
+    return res.view('src/views/entity_records.ejs', { entidad, totalRecords });
   });
 
   fastify.get('/records', async (req, res) => {
