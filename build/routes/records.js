@@ -35,8 +35,8 @@ async function default_1(fastify, opts) {
         });
         return parseRecord(record);
     });
-    fastify.get('/records/:companyId/top', async (req, res) => {
-        const { companyId } = req.params;
+    fastify.get('/records/:companyId/top/:skip', async (req, res) => {
+        const { companyId, skip } = req.params;
         //   const address = config.CONTRACT_ADDRESS;
         //   const signer = config.LOCAL ? 
         //   ethersProvider.getSigner()
@@ -58,11 +58,26 @@ async function default_1(fastify, opts) {
                 createdAt: 'desc'
             },
             take: 10,
+            skip: 10 * (Number(skip) - 1),
             include: {
                 entidad: true
             }
         });
-        return res.view('src/views/index.ejs', { parsedRecords: latestRecords.map(record => parseRecord(record)) });
+        const entidad = await prisma.entidad.findUnique({
+            where: {
+                id: Number(companyId)
+            },
+            include: {
+                Registro: {
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    take: 10,
+                    skip: 10 * (skip - 1),
+                }
+            }
+        });
+        return res.view('src/views/entity_records.ejs', { entidad });
     });
     fastify.get('/records', async (req, res) => {
         const latestRecords = await prisma.registro.findMany({
