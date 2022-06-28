@@ -45,12 +45,43 @@
 
 
       </table>
-
+<% if (pages > -1) { %>
+  <nav>
+    <ul class="pagination">
+        <% if (current == 0) { %>
+            <li class="page-item"><a class="page-link">First</a></li>
+        <% } else { %>
+            <li class="page-item"><a class="page-link" href="/records/<%= entidad.id %>/top/1">First</a></li>
+        <% } %>
+        <% var i = (Number(current) > 4 ? Number(current) - 4 : 1) %>
+        <% if (i !== 0) { %>
+            <li class="page-item"><a class="page-link">...</a></li>
+        <% } %>
+        <% for (; i <= (Number(current) + 3) && i <= pages; i++) { %>
+            <% if (i == current) { %>
+                <li class="page-item"><a class="page-link"><%= i %></a></li>
+            <% } else { %>
+                <li class="page-item"><a class="page-link" href="/records/<%= entidad.id %>/top/<%= i %>"><%= i %></a></li>
+            <% } %>
+            <% if (i == Number(current) + 3 && i < pages) { %>
+                <li class="page-item"><a class="page-link">...</a></li>
+            <% } %>
+        <% } %>
+        <% if (current == pages) { %>
+            <li class="page-item"><a class="page-link">Last</a></li>
+        <% } else { %>
+            <li class="page-item"><a class="page-link" href="/records/<%= entidad.id %>/top/<%= pages %>">Last</a></li>
+        <% } %>
+    </ul>
+</nav>
+<% } %>
   </div>
+
 
   <!-- Footer -->
 <footer class="text-center text-lg-start bg-light text-muted">
   <!-- Section: Social media -->
+
   <section
     class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
   >

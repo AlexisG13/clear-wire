@@ -91,7 +91,7 @@ export default async function (fastify, opts) {
       }
     })
     
-    return res.view('src/views/entity_records.ejs', { entidad, totalRecords });
+    return res.view('src/views/entity_records.ejs', { entidad, pages: Math.ceil(totalRecords/10), current: Number(skip) });
   });
 
   fastify.get('/records', async (req, res) => {

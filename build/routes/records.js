@@ -82,7 +82,7 @@ async function default_1(fastify, opts) {
                 entidadId: Number(companyId)
             }
         });
-        return res.view('src/views/entity_records.ejs', { entidad, totalRecords });
+        return res.view('src/views/entity_records.ejs', { entidad, pages: Math.ceil(totalRecords / 10), current: Number(skip) });
     });
     fastify.get('/records', async (req, res) => {
         const latestRecords = await prisma.registro.findMany({
